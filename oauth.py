@@ -1,6 +1,8 @@
 from __future__ import absolute_import, print_function
 
 import tweepy
+from pymongo import MongoClient
+import json
 
 # == OAuth Authentication ==
 #
@@ -26,9 +28,19 @@ api = tweepy.API(auth)
 
 # If the authentication was successful, you should
 # see the name of the account print out
-print(api.me().name)
+# print(api.me().name)
+
+client = MongoClient()
+db = client.cuteaplick
+tweets = db.tweets
+document=tweepy.Cursor(api.search,q="#Doge").items()
+
+for row in document:
+    tweets.insert(row._json)
+
+
 
 # If the application settings are set for "Read and Write" then
 # this line should tweet out the message to your account's
 # timeline. The "Read and Write" setting is on https://dev.twitter.com/apps
-api.update_status(status='Updating using OAuth authentication via Tweepy!')
+# api.update_status(status='Updating using OAuth authentication via Tweepy!')
